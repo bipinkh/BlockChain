@@ -2,6 +2,17 @@ package class1;
 
 public class monoSubstitution implements CipherInterface{
 	
+	String UpperAlphabets;
+	String LowerAlphabets;
+	Integer length;
+	
+	public monoSubstitution()
+	{
+		UpperAlphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		LowerAlphabets="abcdefghijklmnopqrstuvwxyz";
+		length=UpperAlphabets.length();
+	}
+	
 	@Override
 	public String encryption(String plainText, String key) {
 			String cipherText = new String();			//result variable
@@ -12,11 +23,11 @@ public class monoSubstitution implements CipherInterface{
 				if (Character.isAlphabetic(check))
 				{
 					if (Character.isUpperCase(check))	
-						{	int index = check - 'A';	//0 to 25
+						{	int index = check - UpperAlphabets.charAt(0);
 							check = Character.toUpperCase(key.charAt(index));
 						}	
 					else
-						{	int index = check - 'a';
+						{	int index = check - LowerAlphabets.charAt(0);
 							check = Character.toLowerCase(key.charAt(index));
 						}
 				}
@@ -36,9 +47,9 @@ public class monoSubstitution implements CipherInterface{
 			check = cipherText.charAt(i);			
 			if (Character.isAlphabetic(check))
 			{
-				int index = key.indexOf(Character.toUpperCase(check));	//0 to 26
-				if (Character.isUpperCase(check))	{ check = (char) (index + 'A');	}
-				else								{check = (char) (index + 'a');	}
+				int index = key.indexOf(Character.toUpperCase(check));
+				if (Character.isUpperCase(check))	{ check = (char) (index + UpperAlphabets.charAt(0));	}
+				else								{check = (char) (index + LowerAlphabets.charAt(0));	}
 			}
 			plainText+=check;
 	}

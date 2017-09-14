@@ -4,16 +4,18 @@ public class Vigenere implements CipherInterface{
 	
 	public static char[][] matrix;
 	String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	Integer length;
 	
 	public Vigenere()
 	{
-		 matrix= new char [26][26];
-		for (int i=0;i<26;i++)
-				for (int j=0; j<26; j++)
+		length=abc.length();
+		matrix= new char [length][length];
+		for (int i=0;i<length;i++)
+				for (int j=0; j<length; j++)
 					{
-						matrix[i][j]=(char)('A'+j+i);
-						if (matrix[i][j] > 'Z')
-							matrix[i][j] -= 26;
+						matrix[i][j]=(char)(abc.charAt(0)+j+i);
+						if (matrix[i][j] > abc.charAt(length-1))
+							matrix[i][j] -= length;
 						
 					}
 	}
@@ -50,7 +52,7 @@ public class Vigenere implements CipherInterface{
 			if(Character.isAlphabetic(ch))
 			{
 				int row = abc.indexOf(key.charAt(i));
-				for (int j=0 ; j<26; j++)
+				for (int j=0 ; j<length; j++)
 					if (matrix[row][j]==ch)
 					{
 						ch=abc.charAt(j);

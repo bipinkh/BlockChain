@@ -1,6 +1,15 @@
 package class1;
 
 public class caesarCipher implements CipherInterface{
+	
+	String alphabets;
+	Integer length;
+	
+	public caesarCipher()
+	{
+		alphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		length=alphabets.length();
+	}
 
 	@Override
 	public String encryption(String plainText, String keyString) {
@@ -13,8 +22,8 @@ public class caesarCipher implements CipherInterface{
 			if (Character.isAlphabetic(check))
 			{	
 				check+=key;									//converted to cipher character
-				if (Character.toUpperCase(check) > 'Z') 
-				{	check-=26;								//overflow should be deducted by 26 alphabets
+				if (Character.toUpperCase(check) > alphabets.charAt(length-1)) 
+				{	check-=length;								//overflow should be deducted by 26 alphabets
 				}
 			}
 			cipherText+=check;
@@ -34,8 +43,8 @@ public class caesarCipher implements CipherInterface{
 			if (Character.isAlphabetic(check))
 			{	
 				check-=key;									//converted to plain character
-				if (Character.toUpperCase(check) < 'A') 
-				{	check+=26;								//underflow should be increased by 26 alphabets
+				if (Character.toUpperCase(check) < alphabets.charAt(0)) 
+				{	check+=length;								//underflow should be increased by 26 alphabets
 				}
 			}
 			plainText+=check;
