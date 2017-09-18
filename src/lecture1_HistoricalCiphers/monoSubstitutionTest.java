@@ -1,17 +1,18 @@
-package class1;
+package lecture1_HistoricalCiphers;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class VigenereTest {
+public class monoSubstitutionTest {
 
 	@Test
 	public void test() {
-		Vigenere testObject = new Vigenere();
 		
-		String testString = "TOBEO RNOTT OBE";
-		String key = "RELAT IONSR ELA";
+		monoSubstitution testObject = new monoSubstitution();
+		
+		String testString="httP:// Lorem 123 ipsumz";
+		String key="qwertyuiopasdfghjklzxcvbnm";
 		
 		String encryptedText=testObject.encryption(testString, key);
 		System.out.println(encryptedText);
@@ -19,6 +20,7 @@ public class VigenereTest {
 		System.out.println(decryptedText);
 		
 		assertEquals(testString,decryptedText);
+		
 	}
 
 }

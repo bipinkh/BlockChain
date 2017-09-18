@@ -1,18 +1,17 @@
-package class1;
+package lecture1_HistoricalCiphers;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class caesarCipherTest {
+public class VigenereTest {
 
 	@Test
-	public void test()
-	{
-		caesarCipher testObject = new caesarCipher();
+	public void test() {
+		Vigenere testObject = new Vigenere();
 		
-		String testString = "http:// lorem ipsum";
-		String key = "5";
+		String testString = "TOBEO RNOTT OBE";
+		String key = "RELAT IONSR ELA";
 		
 		String encryptedText=testObject.encryption(testString, key);
 		System.out.println(encryptedText);
@@ -21,4 +20,5 @@ public class caesarCipherTest {
 		
 		assertEquals(testString,decryptedText);
 	}
+
 }

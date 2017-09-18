@@ -1,4 +1,4 @@
-package lectureClass2;
+package lecture2_RC4;
 
 public interface CipherInterface {
 	public String encryption(String plainText, String key);

@@ -1,4 +1,4 @@
-package class1;
+package lecture1_HistoricalCiphers;
 
 public class monoSubstitution implements CipherInterface{
 	

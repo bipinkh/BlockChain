@@ -1,18 +1,18 @@
-package class1;
+package lecture1_HistoricalCiphers;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class monoSubstitutionTest {
+public class caesarCipherTest {
 
 	@Test
-	public void test() {
+	public void test()
+	{
+		caesarCipher testObject = new caesarCipher();
 		
-		monoSubstitution testObject = new monoSubstitution();
-		
-		String testString="httP:// Lorem 123 ipsumz";
-		String key="qwertyuiopasdfghjklzxcvbnm";
+		String testString = "http:// lorem ipsum";
+		String key = "5";
 		
 		String encryptedText=testObject.encryption(testString, key);
 		System.out.println(encryptedText);
@@ -20,7 +20,5 @@ public class monoSubstitutionTest {
 		System.out.println(decryptedText);
 		
 		assertEquals(testString,decryptedText);
-		
 	}
-
 }

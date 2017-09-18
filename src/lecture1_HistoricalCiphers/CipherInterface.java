@@ -1,4 +1,4 @@
-package class1;
+package lecture1_HistoricalCiphers;
 
 public interface CipherInterface {
 	public String encryption(String plainText, String key);
