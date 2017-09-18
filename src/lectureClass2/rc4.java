@@ -1,6 +1,6 @@
 package lectureClass2;
 
-import sun.net.www.content.text.plain;
+
 
 public class rc4 implements CipherInterface {
 
