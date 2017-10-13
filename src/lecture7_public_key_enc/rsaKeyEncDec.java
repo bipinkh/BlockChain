@@ -9,7 +9,7 @@ import java.security.PublicKey;
 import javax.crypto.Cipher;
 
 //using 
-public class symmetricKeyEncDec {
+public class rsaKeyEncDec {
 	
 	public byte[] encryption(byte[] symmetricKey, PublicKey publicKey) throws Exception
 	{

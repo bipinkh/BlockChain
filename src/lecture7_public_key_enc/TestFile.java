@@ -12,14 +12,7 @@ import org.junit.Test;
 
 public class TestFile {
 	
-	//key pair generation for key encryption and decryption
-		public KeyPair generateKeyPair(int keySize) throws NoSuchAlgorithmException
-		{
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(keySize);
-			KeyPair keyPair = keyPairGenerator.genKeyPair();
-			return keyPair;
-		}
+
 
 	@Test
 	public void test() throws Exception {
@@ -30,7 +23,7 @@ public class TestFile {
 		String decryptedFile = "src\\lecture7_public_key_enc\\decrypted.txt";
 		
 	//public key and private key
-		KeyPair keypair = generateKeyPair(2048);
+		KeyPair keypair = keyPairGen.generateKeyPair(2048);
 		PublicKey pubKey = keypair.getPublic();
 		PrivateKey prvKey = keypair.getPrivate();
 		

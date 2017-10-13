@@ -2,20 +2,26 @@ package lecture7_public_key_enc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+
+import sun.misc.IOUtils;
 
 //using AES
 public class DigitalEnvelope {
@@ -39,51 +45,32 @@ public class DigitalEnvelope {
 			public void encryption (String inputFile, String outputFile, PublicKey publicKey) throws Exception
 			{
 				System.out.println("Encrypting");
+				BufferedWriter writer=null;
+				Scanner fileIn;
+				
 					//AES cipher
 					generateKey(16);
-					Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+					Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 					cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec );
 
 					try{
 						//open file reader and writer
-						FileReader fileReader = new FileReader(inputFile);
-						BufferedReader bufferedReader = new BufferedReader(fileReader);		
-						FileWriter fileWriter = new FileWriter(outputFile);
-						BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+						writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile),"utf-8"));
+						fileIn = new Scanner(new File(inputFile));
 						String line = null;
-						Integer i = 0;
 						
 						// Encrypting Data - using AES
-						while((line = bufferedReader.readLine()) != null) 
-						{
+						while(fileIn.hasNextLine())
+						{   line=fileIn.nextLine();
 							byte[] byteResult = cipher.doFinal(line.getBytes());	//encrypt
 							String stringResult = new sun.misc.BASE64Encoder().encode(byteResult);	//encode
-							if (i==0)
-							{
-								System.out.println("line :::"+line + "\nbyte ::: "+ byteResult + "\n string ::: "+stringResult);
-							i++;
-							}
-							bufferedWriter.write(stringResult);	//write to file
-							bufferedWriter.newLine();
-			            } 
-		
-						//Encrypting AES key - using RSA
-						symmetricKeyEncDec encoder = new symmetricKeyEncDec();
-						byte[] key = aesKey.getEncoded(); //get string of SecretKey
-						byte[] encryptedKey = encoder.encryption(key, publicKey); // encrypt key
-						String finalKey = new sun.misc.BASE64Encoder().encode(encryptedKey); //encode key
-						bufferedWriter.write("\n\n\n Encrypted Key for Decoding: ");
-						bufferedWriter.newLine();
-						bufferedWriter.write(finalKey);	//write encoded encrypted key to file
-						
-						//closing writer and reader
-						bufferedWriter.close();
-						fileReader.close();
-						bufferedReader.close();
-						fileReader.close();
-				}
-				 catch(FileNotFoundException ex) { System.out.println("Unable to open file '" +  inputFile + "'"); }
-			     catch(IOException ex) { System.out.println("Error reading file '"+ inputFile + "'"); }
+							writer.write(stringResult+"\n");
+			            }
+						writer.close();
+					}
+					catch (Exception e){
+						System.out.println("Exception Occured :::" + e);
+					}
 			System.out.println("Encryption Successful");
 			}
 			
@@ -93,39 +80,30 @@ public class DigitalEnvelope {
 			public void decryption (String inputFile, String outputFile, PrivateKey prvKey) throws Exception
 			{
 				System.out.println("Decrypting");
+				BufferedWriter writer=null;
+				Scanner fileIn;
+				
 				try{
 					//open file reader and writer
-					FileReader fileReader = new FileReader(inputFile);
-					BufferedReader bufferedReader = new BufferedReader(fileReader);	
-					FileWriter fileWriter = new FileWriter(outputFile);
-					BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+					writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile),"utf-8"));
+					fileIn = new Scanner(new File(inputFile));
 					String line = null;
 					
-					Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+					//AES Cipher
+					Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 					cipher.init(Cipher.DECRYPT_MODE,aesKey, ivParameterSpec);
 					
-					while((line = bufferedReader.readLine()) != null)
-					{	
-						System.out.println("stored string ::: "+line);
+					while(fileIn.hasNextLine())
+					{
+						line=fileIn.nextLine();
 						byte[] byteLine = new sun.misc.BASE64Decoder().decodeBuffer(line); //decode
-						System.out.println("\n byte ::: " + byteLine);
 						byte[] byteResult = cipher.doFinal(byteLine);	//decrypt
-						System.out.println("original ::: "+new String(byteResult));
-						
-						System.out.println(new String(byteResult));
-						String writingLine = new String(byteResult);
-						bufferedWriter.write(writingLine);	//write to file
-						bufferedWriter.newLine();
-		            } 
-								
-					//closing writer and reader
-					bufferedWriter.close();
-					fileReader.close();
-					bufferedReader.close();
-					fileReader.close();
+						String StringResult = new String(byteResult);
+						writer.write(StringResult+"\n");
+					}	
+					writer.close();
 				}
-				catch(FileNotFoundException ex) { System.out.println("Unable to open file '" +  inputFile + "'"); }
-			    catch(IOException ex) { System.out.println("Error reading file '"+ inputFile + "'"); }
+				catch(Exception e) { System.out.println("Exception occured ::: " + e);}
 			System.out.println("Decryption Successful");
 			}
 			
