@@ -31,9 +31,10 @@ IvParameterSpec ivParameterSpec;
 // key generation
 	public void generateKey(byte[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException
 	{
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		MessageDigest digest = MessageDigest.getInstance("SHA-256"); //hash functions
 		digest.update(new String (password).getBytes("UTF-8"));
 		byte[] keyBytes = new byte[16];
+		//digest.digest(byte of string x) gives hash value
 		System.arraycopy(digest.digest(), 0, keyBytes, 0, keyBytes.length);
 		myKey = new SecretKeySpec(keyBytes, "AES");
 	}

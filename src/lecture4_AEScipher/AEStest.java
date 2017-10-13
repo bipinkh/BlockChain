@@ -18,7 +18,7 @@ public class AEStest {
 	@Test
 	public void test() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
-		String password="thisIs16BitPass.";
+		String password="thisIs16BitPasss";
 		String plainText="A quick brown fox jumps over the lazy dog";
 		int ivSize =16;
 		
