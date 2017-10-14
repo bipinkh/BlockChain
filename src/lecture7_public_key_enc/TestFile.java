@@ -23,7 +23,7 @@ public class TestFile {
 		String decryptedFile = "src\\lecture7_public_key_enc\\decrypted.txt";
 		
 	//public key and private key
-		KeyPair keypair = keyPairGen.generateKeyPair(2048);
+		KeyPair keypair = rsaCipher.generateKeyPair(2048);
 		PublicKey pubKey = keypair.getPublic();
 		PrivateKey prvKey = keypair.getPrivate();
 		

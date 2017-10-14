@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -20,52 +21,49 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import sun.misc.IOUtils;
 
-//using AES
 public class DigitalEnvelope {
 	
 	IvParameterSpec ivParameterSpec;
-	SecretKey aesKey;
 	
-	//symmetric aes key generation
-			public void generateKey(int ivSize) throws Exception
-			{
-				byte[] iv = new byte[ivSize];
-				SecureRandom random = new SecureRandom();
-				random.nextBytes(iv);
-				ivParameterSpec = new IvParameterSpec(iv);
-				
-				KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-				aesKey = keyGenerator.generateKey();
-			}
-			
 	//encryption
 			public void encryption (String inputFile, String outputFile, PublicKey publicKey) throws Exception
 			{
 				System.out.println("Encrypting");
 				BufferedWriter writer=null;
-				Scanner fileIn;
 				
-					//AES cipher
-					generateKey(16);
-					Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-					cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec );
-
+					//get aes key and ivparameterspec
+					SecretKey aesKey = aesCipher.generateKey();
+					ivParameterSpec = aesCipher.generateIV(16);	//128 bit
+					
 					try{
-						//open file reader and writer
+						//open file to read and write
 						writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile),"utf-8"));
-						fileIn = new Scanner(new File(inputFile));
-						String line = null;
+						File file = new File(inputFile);
+						RandomAccessFile data = new RandomAccessFile(file, "r");
 						
-						// Encrypting Data - using AES
-						while(fileIn.hasNextLine())
-						{   line=fileIn.nextLine();
-							byte[] byteResult = cipher.doFinal(line.getBytes());	//encrypt
-							String stringResult = new sun.misc.BASE64Encoder().encode(byteResult);	//encode
-							writer.write(stringResult+"\n");
-			            }
+						// Key Encryption and append to file
+						byte[] byteAESkey = aesKey.getEncoded();	
+						byte[] encryptedAESkey = rsaCipher.encryption(byteAESkey, publicKey);
+						String stringAESkey = new sun.misc.BASE64Encoder().encode(encryptedAESkey); 
+						writer.write(Integer.toString(stringAESkey.length())); //keysize on first line
+						writer.newLine();
+						
+						
+						writer.write(stringAESkey);//store encrypted key from second line
+						
+						// Data Encryption
+					    byte[] readBytes = new byte[16];	//read 16 bytes at a time from input file and process
+					    for (long i = 0, len = data.length() / 16; i < len; i++) {
+					          data.readFully(readBytes);
+					          byte[] encrypted = aesCipher.encryption(readBytes, aesKey, ivParameterSpec);
+					          String stringResult = new sun.misc.BASE64Encoder().encode(encrypted);
+					          writer.write(stringResult);
+					     }
+					    data.close();
 						writer.close();
 					}
 					catch (Exception e){
@@ -81,26 +79,33 @@ public class DigitalEnvelope {
 			{
 				System.out.println("Decrypting");
 				BufferedWriter writer=null;
-				Scanner fileIn;
 				
 				try{
 					//open file reader and writer
 					writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile),"utf-8"));
-					fileIn = new Scanner(new File(inputFile));
-					String line = null;
+					File file = new File(inputFile);
+					RandomAccessFile data = new RandomAccessFile(file, "r");
 					
-					//AES Cipher
-					Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-					cipher.init(Cipher.DECRYPT_MODE,aesKey, ivParameterSpec);
-					
-					while(fileIn.hasNextLine())
-					{
-						line=fileIn.nextLine();
-						byte[] byteLine = new sun.misc.BASE64Decoder().decodeBuffer(line); //decode
-						byte[] byteResult = cipher.doFinal(byteLine);	//decrypt
-						String StringResult = new String(byteResult);
-						writer.write(StringResult+"\n");
-					}	
+					//Key Decryption
+					String keySize = data.readLine().toString();
+					Integer intKeySize = Integer.parseInt(keySize); //keysize extracted
+					byte[] Key = new byte[intKeySize];
+					data.readFully(Key); 							//read byte key
+					byte[] byteLine = new sun.misc.BASE64Decoder().decodeBuffer(new String(Key)); //decode
+					byte[] Key2 = rsaCipher.decryption(byteLine, prvKey); //decrypt
+					SecretKey aesKey = new SecretKeySpec(Key2, 0, Key2.length, "AES");	//aesKey extracted
+					System.out.println("Key extracted");
+		
+					//Data Decryption
+					//16 bytes is stored as 24 bytes after being encoded by BASE64. so, read 24 bytes at a time
+				    byte[] readBytes = new byte[24];
+					for (long i = 0, len = (data.length()-data.getFilePointer()) / 24; i < len; i++) {
+				          data.readFully(readBytes);
+				          byte[] readbyte = new sun.misc.BASE64Decoder().decodeBuffer(new String(readBytes)); //decode
+				          byte[] byteResult = aesCipher.decryption(readbyte, aesKey, ivParameterSpec); //decrypt
+				          writer.write(new String(byteResult));
+				     }
+					data.close();
 					writer.close();
 				}
 				catch(Exception e) { System.out.println("Exception occured ::: " + e);}

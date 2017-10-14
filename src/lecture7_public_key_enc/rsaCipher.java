@@ -9,9 +9,18 @@ import java.security.PublicKey;
 import javax.crypto.Cipher;
 
 //using 
-public class rsaKeyEncDec {
+public class rsaCipher {
 	
-	public byte[] encryption(byte[] symmetricKey, PublicKey publicKey) throws Exception
+	//key pair generation for key encryption and decryption
+	public static KeyPair generateKeyPair(int keySize) throws NoSuchAlgorithmException
+	{
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		keyPairGenerator.initialize(keySize);
+		KeyPair keyPair = keyPairGenerator.genKeyPair();
+		return keyPair;
+	}
+	
+	public static byte[] encryption(byte[] symmetricKey, PublicKey publicKey) throws Exception
 	{
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -19,7 +28,7 @@ public class rsaKeyEncDec {
 		return encryptedKey;
 	}
 	
-	public byte[] decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
+	public static byte[] decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
 	{
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.DECRYPT_MODE, privateKey);
