@@ -18,9 +18,9 @@ public class TestFile {
 	public void test() throws Exception {
 		
 	//files location
-		String inputFilepath = "src\\lecture7_public_key_enc\\originalText.txt";
-		String outputFilepath = "src\\lecture7_public_key_enc\\encrypted.txt";
-		String decryptedFile = "src\\lecture7_public_key_enc\\decrypted.txt";
+		String inputFilepath = "src\\lecture7_public_key_enc\\text-files\\originalText.txt";
+		String outputFilepath = "src\\lecture7_public_key_enc\\text-files\\encrypted.txt";
+		String decryptedFile = "src\\lecture7_public_key_enc\\text-files\\decrypted.txt";
 		
 	//public key and private key
 		KeyPair keypair = rsaCipher.generateKeyPair(2048);
@@ -31,7 +31,5 @@ public class TestFile {
 		DigitalEnvelope de = new DigitalEnvelope();
 		de.encryption(inputFilepath, outputFilepath, pubKey);
 		de.decryption(outputFilepath,decryptedFile, prvKey);
-		
 	}
-
 }
