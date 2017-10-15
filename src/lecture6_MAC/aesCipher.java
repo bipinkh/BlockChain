@@ -62,7 +62,4 @@ public class aesCipher {
 			System.out.println("Decryption Sucessful");
 			return new String(result);
 		}
-
-
-
 }

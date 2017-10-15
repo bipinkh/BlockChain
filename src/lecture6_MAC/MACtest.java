@@ -1,13 +1,11 @@
 package lecture6_MAC;
 
 import static org.junit.Assert.*;
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-
 import org.junit.Test;
-
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 public class MACtest {
 
@@ -27,15 +25,22 @@ public class MACtest {
 		mac.initilialize(passwordMAC, macAlgorithm);
 		
 		//encrypt and get mac value
+		String sentMAC = new BASE64Encoder().encode(mac.getMAC(text));
 		byte[] encryptedText = aesCipher.encryption(text, aesKey, ivparam);
-		byte[] sentMAC = mac.getMAC(text);
-		
+		String encryptedTextString = new BASE64Encoder().encode(encryptedText);
+			
 		//decrypt and get mac value
-		String decryptedtext = aesCipher.decryption(encryptedText, aesKey, ivparam);
-		byte [] receivedMAC = mac.getMAC(decryptedtext);
+		byte [] decryptedText = new BASE64Decoder().decodeBuffer(encryptedTextString); 
+		String decryptedTextString = aesCipher.decryption(encryptedText, aesKey, ivparam);
+		String receivedMAC = new BASE64Encoder().encode(mac.getMAC(decryptedTextString));
+
+		assertEquals(text,decryptedTextString);
+		assertEquals(sentMAC,receivedMAC);
 		
-		//check
-		assertEquals(text, new String(decryptedtext));
-		assertEquals(new String(sentMAC), new String(receivedMAC));
+		System.out.println("Original Text ::: " + text);
+		System.out.println("Encrypted Text ::: " + encryptedTextString);
+		System.out.println("Recieved Text ::: " + decryptedTextString);
+		System.out.println("Appended MAC value ::: " +sentMAC);
+		System.out.println("Recieved MAC value ::: " +receivedMAC);
 	}
 }
