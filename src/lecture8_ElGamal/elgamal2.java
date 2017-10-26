@@ -6,11 +6,12 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+
 import javax.crypto.Cipher;
 
 import org.bouncycastle.util.encoders.Base64;
 
-public class ElGamal {
+public class elgamal2 {
 	public static final String Algorithm = "ElGamal/ECB/PKCS1PADDING";
 	public static final String Provider = "BC";
 	
@@ -64,5 +65,5 @@ public class ElGamal {
 			cipher.init(Cipher.DECRYPT_MODE, prvKey);
 			return cipher.doFinal(message);
 		}
-	
+
 }
