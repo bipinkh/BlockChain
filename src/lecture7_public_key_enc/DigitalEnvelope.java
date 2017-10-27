@@ -17,6 +17,8 @@ public class DigitalEnvelope {
 			{
 				System.out.println("Encrypting");
 				
+				rsaCipher rsa = new rsaCipher();
+				
 					//get aes key and ivparameterspec
 					SecretKey aesKey = aesCipher.generateKey();
 					IvParameterSpec ivParameterSpec = aesCipher.generateIV(16);	//16 byte
@@ -28,7 +30,7 @@ public class DigitalEnvelope {
 						
 						// get key and ivspec
 						byte[] byteAESkey = aesKey.getEncoded();	
-						byte[] encryptedAESkey = rsaCipher.encryption(byteAESkey, publicKey);
+						byte[] encryptedAESkey = rsa.encryption(byteAESkey, publicKey);
 						
 						//write 16 bytes of iv and then 256 bytes of encrypted aesKey
 						fileOutput.write(ivParameterSpec.getIV());
@@ -52,6 +54,9 @@ public class DigitalEnvelope {
 	//decryption
 			public void decryption (String inputFile, String outputFile, PrivateKey prvKey) throws Exception
 			{
+				
+				rsaCipher rsa = new rsaCipher();
+				
 				System.out.println("Decrypting");
 				
 				try{
@@ -67,7 +72,7 @@ public class DigitalEnvelope {
 					//read and decrypt aesKey
 					byte[] keyBytes = new byte[256];
 					fileInput.read(keyBytes);
-					byte[] aesKeyEncrypted = rsaCipher.decryption(keyBytes, prvKey);	//decrypt
+					byte[] aesKeyEncrypted = rsa.decryption(keyBytes, prvKey);	//decrypt
 					SecretKey aesKey = new SecretKeySpec(aesKeyEncrypted, 0, aesKeyEncrypted.length, "AES");
 					
 					// Data Decryption

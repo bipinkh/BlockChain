@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import org.junit.Test;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
 
 public class MACtest {
 
@@ -24,15 +24,18 @@ public class MACtest {
 		HMAC mac = new HMAC();
 		mac.initilialize(passwordMAC, macAlgorithm);
 		
-		//encrypt and get mac value
-		String sentMAC = new BASE64Encoder().encode(mac.getMAC(text));
+		//get mac value of original text
+		String sentMAC = Base64.encodeBase64String(mac.getMAC(text));
+		
+		//encryption
 		byte[] encryptedText = aesCipher.encryption(text, aesKey, ivparam);
-		String encryptedTextString = new BASE64Encoder().encode(encryptedText);
+		String encryptedTextString = Base64.encodeBase64String(encryptedText);
 			
-		//decrypt and get mac value
-		byte [] decryptedText = new BASE64Decoder().decodeBuffer(encryptedTextString); 
+		//decryption
 		String decryptedTextString = aesCipher.decryption(encryptedText, aesKey, ivparam);
-		String receivedMAC = new BASE64Encoder().encode(mac.getMAC(decryptedTextString));
+		
+		//get mac value of received text
+		String receivedMAC = Base64.encodeBase64String(mac.getMAC(decryptedTextString));
 
 		assertEquals(text,decryptedTextString);
 		assertEquals(sentMAC,receivedMAC);

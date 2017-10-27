@@ -1,10 +1,6 @@
 package lecture7_public_key_enc;
 
-import static org.junit.Assert.*;
-
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -23,7 +19,8 @@ public class TestFile {
 		String decryptedFile = "src\\lecture7_public_key_enc\\text-files\\decrypted.txt";
 		
 	//public key and private key
-		KeyPair keypair = rsaCipher.generateKeyPair(2048);
+		rsaCipher rsa = new rsaCipher();
+		KeyPair keypair = rsa.generateKeyPair(2048);
 		PublicKey pubKey = keypair.getPublic();
 		PrivateKey prvKey = keypair.getPrivate();
 		

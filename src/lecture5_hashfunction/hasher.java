@@ -1,8 +1,7 @@
 package lecture5_hashfunction;
 
 import java.security.MessageDigest;
-
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 public class hasher {
 	
@@ -11,7 +10,7 @@ public class hasher {
 		try{
 			MessageDigest digest = MessageDigest.getInstance(algorithm);
 			byte[] hashValue = digest.digest(message.getBytes());
-			encodedHashString = new BASE64Encoder().encode(hashValue);
+			encodedHashString = Base64.encodeBase64String(hashValue);
 			return encodedHashString;
 		}
 		catch(Exception e){

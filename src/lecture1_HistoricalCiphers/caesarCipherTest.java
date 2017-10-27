@@ -13,7 +13,7 @@ public class caesarCipherTest {
 		
 		String testString = "http:// lorem ipsum";
 		String key = "5";
-		
+
 		String encryptedText=testObject.encryption(testString, key);
 		System.out.println(encryptedText);
 		String decryptedText=testObject.decryption(encryptedText, key);

@@ -14,6 +14,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
+
 public class AES {
 
 SecretKeySpec myKey;
@@ -46,7 +48,7 @@ IvParameterSpec ivParameterSpec;
 			cipher.init(Cipher.ENCRYPT_MODE, myKey, ivParameterSpec );
 			byte[] byteResult = cipher.doFinal(bytePlainText);
 			
-			String encodedResult = new sun.misc.BASE64Encoder().encode(byteResult);
+			String encodedResult = Base64.encodeBase64String(byteResult);;
 			//display result
 			System.out.println("Base64 Encoded Encrypted Message: "+ encodedResult );	//after encryption followed by encoding
 			

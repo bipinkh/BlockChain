@@ -12,7 +12,7 @@ import javax.crypto.Cipher;
 public class rsaCipher {
 	
 	//key pair generation for key encryption and decryption
-	public static KeyPair generateKeyPair(int keySize) throws NoSuchAlgorithmException
+	public KeyPair generateKeyPair(int keySize) throws NoSuchAlgorithmException
 	{
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		keyPairGenerator.initialize(keySize);
@@ -20,7 +20,7 @@ public class rsaCipher {
 		return keyPair;
 	}
 	
-	public static byte[] encryption(byte[] symmetricKey, PublicKey publicKey) throws Exception
+	public byte[] encryption(byte[] symmetricKey, PublicKey publicKey) throws Exception
 	{
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -28,7 +28,7 @@ public class rsaCipher {
 		return encryptedKey;
 	}
 	
-	public static byte[] decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
+	public byte[] decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
 	{
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.DECRYPT_MODE, privateKey);

@@ -11,6 +11,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
+
 
 
 public class TripleDEScipher{
@@ -36,7 +38,7 @@ public class TripleDEScipher{
 			Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] byteResult = cipher.doFinal(bytePlainText);
-			String encodedResult = new sun.misc.BASE64Encoder().encode(byteResult);
+			String encodedResult = Base64.encodeBase64String(byteResult);
 			//display result
 			System.out.println("Encrypted byte Message: "+ new String(byteResult));	//after encryption
 			System.out.println("Base64 Encoded Encrypted Message: "+ encodedResult );	//after encryption followed by encoding
