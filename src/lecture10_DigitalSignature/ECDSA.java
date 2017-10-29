@@ -14,14 +14,13 @@ import java.security.spec.ECGenParameterSpec;
  *
  * @author bipin
  */
+
 public class ECDSA {
 
     public static String Algorithm = null;
     public static String Provider = "BC";
     public static String Curve = null;
     KeyPair kp = null;
-    
-
 
       //constructor consists of adding bouncy castle provider, algorithm and curve
         ECDSA(String alg, String crv){
